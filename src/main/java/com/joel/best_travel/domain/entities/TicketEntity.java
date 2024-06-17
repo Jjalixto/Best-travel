@@ -3,6 +3,7 @@ package com.joel.best_travel.domain.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -20,24 +21,20 @@ public class TicketEntity implements Serializable {
 
     @Id
     private UUID id;
-
-    private LocalDate departureDate;
-
-    private LocalDate arrivalDate;
-
+    private LocalDateTime departureDate;
+    private LocalDateTime arrivalDate;
     private LocalDate purchaseDate;
-
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fly_id")
     private FlyEntity fly;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = true)
     private TourEntity tour;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 }

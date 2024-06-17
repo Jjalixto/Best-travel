@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
+
+import com.joel.best_travel.domain.entities.HotelEntity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,12 +17,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class TicketResponse implements Serializable {
-
+public class ReservationResponse implements Serializable{
+    
     private UUID id;
-    private LocalDateTime departureDate;
-    private LocalDateTime arrivalDate;
-    private LocalDate purchaseDate;
+        private LocalDateTime dateTimeReservation;
+    private LocalDate dateStart;
+    private LocalDate dateEnd;
+    private Integer totalDays;
     private BigDecimal price;
-    private FlyResponse flyResponse;
+    private HotelEntity hotel;
 }

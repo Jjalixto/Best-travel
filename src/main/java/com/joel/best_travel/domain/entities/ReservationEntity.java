@@ -21,16 +21,11 @@ public class ReservationEntity implements Serializable {
 
     @Id
     private UUID id;
-
     @Column(name = "date_reservation")
     private LocalDateTime dateTimeReservation;
-
     private LocalDate dateStart;
-
     private LocalDate dateEnd;
-
     private Integer totalDays;
-
     private BigDecimal price;
 
     @ManyToOne

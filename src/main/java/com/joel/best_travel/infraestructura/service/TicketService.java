@@ -39,10 +39,10 @@ public class TicketService implements ITicketService {
                 .id(UUID.randomUUID())
                 .fly(fly)
                 .customer(customer)
-                .price(fly.getPrice().multiply(BigDecimal.valueOf(0.25)))
+                .price(fly.getPrice().multiply(charger_price_percentage))
                 .purchaseDate(LocalDate.now())
-                .arrivalDate(LocalDate.now())
-                .departureDate(LocalDate.now())
+                .arrivalDate(LocalDateTime.now())
+                .departureDate(LocalDateTime.now())
                 .build();
         var ticketPersisted = this.ticketRepository.save(ticketToPersist);
         log.info("Ticked saved with id: {}" + ticketPersisted.getId());
@@ -51,19 +51,37 @@ public class TicketService implements ITicketService {
 
     @Override
     public TicketResponse read(UUID id) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        var ticketFromDB = this.ticketRepository.findById(id).orElseThrow();
+        return this.entityToResponse(ticketFromDB);
     }
 
     @Override
     public TicketResponse update(TicketRequest resquest, UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        var ticketToUpdate = ticketRepository.findById(id).orElseThrow();
+        var fly = flyRepository.findById(resquest.getIdFly()).orElseThrow();
+
+        ticketToUpdate.setFly(fly);
+        ticketToUpdate.setPrice(fly.getPrice().multiply(charger_price_percentage));
+        ticketToUpdate.setDepartureDate(LocalDateTime.now());
+        ticketToUpdate.setArrivalDate(LocalDateTime.now());
+
+        var ticketUpdate = this.ticketRepository.save(ticketToUpdate);
+
+        log.info("Ticket updated  with id {}"+ ticketUpdate.getId());
+
+        return this.entityToResponse(ticketToUpdate);
     }
 
     @Override
     public void delete(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        var ticketToDelete = ticketRepository.findById(id).orElseThrow();
+        this.ticketRepository.delete(ticketToDelete);
+    }
+
+    @Override
+    public BigDecimal findPrice(Long flyId) {
+        var fly = this.flyRepository.findById(flyId).orElseThrow();
+        return fly.getPrice().multiply(charger_price_percentage);
     }
 
     private TicketResponse entityToResponse(TicketEntity entity) {
@@ -75,4 +93,5 @@ public class TicketService implements ITicketService {
         return response;
     }
 
+    private static final BigDecimal charger_price_percentage = BigDecimal.valueOf(0.25);
 }
