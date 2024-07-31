@@ -1,7 +1,6 @@
 package com.joel.best_travel.api.controllers;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
