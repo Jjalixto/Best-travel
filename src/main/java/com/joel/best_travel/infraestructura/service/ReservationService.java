@@ -10,12 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joel.best_travel.api.models.request.ReservationRequest;
-import com.joel.best_travel.api.models.response.FlyResponse;
 import com.joel.best_travel.api.models.response.HotelResponse;
 import com.joel.best_travel.api.models.response.ReservationResponse;
-import com.joel.best_travel.api.models.response.TicketResponse;
 import com.joel.best_travel.domain.entities.ReservationEntity;
-import com.joel.best_travel.domain.entities.TicketEntity;
 import com.joel.best_travel.domain.repositories.CustomerRepository;
 import com.joel.best_travel.domain.repositories.HotelRepository;
 import com.joel.best_travel.domain.repositories.ReservationRepository;
@@ -35,14 +32,14 @@ public class ReservationService implements IReservationService{
     private final ReservationRepository reservationRepository;
 
     @Override
-    public ReservationEntity create(ReservationRequest request) {
+    public ReservationResponse create(ReservationRequest request) {
         var hotel = this.hotelRepository.findById(request.getIdHotel()).orElseThrow();
-        var custumer = this.customerRepository.findById(request.getIdClient()).orElseThrow();
+        var customer = this.customerRepository.findById(request.getIdClient()).orElseThrow();
         
         var reservationToPersist = ReservationEntity.builder()
             .id(UUID.randomUUID())
             .hotel(hotel)
-            .customer(custumer)
+            .customer(customer) 
             .totalDays(request.getTotalDays())
             .dateTimeReservation(LocalDateTime.now())
             .dateStart(LocalDate.now())
@@ -56,21 +53,30 @@ public class ReservationService implements IReservationService{
     }
 
     @Override
-    public ReservationEntity read(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'read'");
+    public ReservationResponse read(UUID id) {
+        var reservationFromDB = this.reservationRepository.findById(id).orElseThrow();
+        return this.entityToResponse(reservationFromDB);
     }
 
-    @Override
-    public ReservationEntity update(ReservationRequest resquest, UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    @Override   
+    public ReservationResponse update(ReservationRequest resquest, UUID id) {
+        var hotel = this.hotelRepository.findById(resquest.getIdHotel()).orElseThrow();
+        var reservationToUpdate = this.reservationRepository.findById(id).orElseThrow();
+        reservationToUpdate.setHotel(hotel);
+        reservationToUpdate.setTotalDays(resquest.getTotalDays());
+        reservationToUpdate.setDateTimeReservation(LocalDateTime.now());
+        reservationToUpdate.setDateStart(LocalDate.now());
+        reservationToUpdate.setDateEnd(LocalDate.now().plusDays(resquest.getTotalDays()));
+        reservationToUpdate.setPrice(hotel.getPrice().add(hotel.getPrice().multiply(charges_price_percentage)));
+        var reservationUpdated = this.reservationRepository.save(reservationToUpdate);
+        log.info("Reservation updated with id{}", reservationToUpdate.getId());
+        return this.entityToResponse(reservationUpdated);
     }
 
     @Override
     public void delete(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        var reservationToDelete = reservationRepository.findById(id).orElseThrow();
+        this.reservationRepository.delete(reservationToDelete);
     }
 
     private ReservationResponse entityToResponse(ReservationEntity entity){
@@ -80,6 +86,12 @@ public class ReservationService implements IReservationService{
         BeanUtils.copyProperties(entity.getHotel(), hotelResponse);
         response.setHotel(hotelResponse);
         return response;
+    }
+
+    @Override
+    public BigDecimal findPrice(Long hotelId){
+        var hotel = hotelRepository.findById(hotelId).orElseThrow();
+        return hotel.getPrice().add(hotel.getPrice().multiply(charges_price_percentage));
     }
     
     private static final BigDecimal charges_price_percentage = BigDecimal.valueOf(0.20);
