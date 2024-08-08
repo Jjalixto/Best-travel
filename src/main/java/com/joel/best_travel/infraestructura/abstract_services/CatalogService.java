@@ -9,7 +9,7 @@ import com.joel.best_travel.util.SortType;
 
 public interface CatalogService<R> {
 
-    Page<R> realALL(Integer page, Integer size, SortType sortType);
+    Page<R> realAll(Integer page, Integer size, SortType sortType);
 
     Set<R> readLessPrice(BigDecimal price);
 

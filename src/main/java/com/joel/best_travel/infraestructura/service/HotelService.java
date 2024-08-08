@@ -9,60 +9,62 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joel.best_travel.api.models.response.FlyResponse;
+import com.joel.best_travel.api.models.response.HotelResponse;
 import com.joel.best_travel.domain.entities.FlyEntity;
-import com.joel.best_travel.domain.repositories.FlyRepository;
-import com.joel.best_travel.infraestructura.abstract_services.IFlyService;
+import com.joel.best_travel.domain.entities.HotelEntity;
+import com.joel.best_travel.domain.repositories.HotelRepository;
+import com.joel.best_travel.infraestructura.abstract_services.IHotelService;
 import com.joel.best_travel.util.SortType;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Transactional
 @Service
 @AllArgsConstructor
-public class FlyService implements IFlyService{
+public class HotelService implements IHotelService{
 
-    private final FlyRepository flyRepository;
+    private final HotelRepository hotelRepository;
 
     @Override
-    public Page<FlyResponse> realAll(Integer page, Integer size, SortType sortType) {
+    public Page<HotelResponse> realAll(Integer page, Integer size, SortType sortType) {
         PageRequest pageRequest = null;
         switch(sortType){
             case NONE -> pageRequest = PageRequest.of(page, size);
             case LOWER -> pageRequest = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT).ascending());
             case UPPER -> pageRequest = PageRequest.of(page, size, Sort.by(FIELD_BY_SORT).descending());
         }
-        return this.flyRepository.findAll(pageRequest).map(this::entityToResponse);
+        return this.hotelRepository.findAll(pageRequest).map(this::entityToResponse);
     }
 
     @Override
-    public Set<FlyResponse> readLessPrice(BigDecimal price) {
-        return this.flyRepository.selectLessPrice(price)
+    public Set<HotelResponse> readLessPrice(BigDecimal price) {
+        return this.hotelRepository.findByPriceLessThan(price)
             .stream()
             .map(this::entityToResponse)
             .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<FlyResponse> readBetweenPrices(BigDecimal min, BigDecimal max) {
-        return this.flyRepository.selectBetweenPrice(min,max)
+    public Set<HotelResponse> readBetweenPrices(BigDecimal min, BigDecimal max) {
+        return this.hotelRepository.findByPriceBetween(min,max)
             .stream()
             .map(this::entityToResponse)
             .collect(Collectors.toSet());
     }
 
     @Override
-    public Set<FlyResponse> readByOriginDestiny(String origen, String destiny) {
-        return this.flyRepository.selectOriginDestiny(origen,destiny)
+    public Set<HotelResponse> readByRating(Integer rating) {
+        return this.hotelRepository.findByRatingGreaterThan(rating)
             .stream()
             .map(this::entityToResponse)
             .collect(Collectors.toSet());
     }
     
-    private FlyResponse entityToResponse(FlyEntity entity){
-        FlyResponse response = new FlyResponse();
+    private HotelResponse entityToResponse(HotelEntity entity){
+        HotelResponse response = new HotelResponse();
         BeanUtils.copyProperties(entity, response);
         return response;
     }
