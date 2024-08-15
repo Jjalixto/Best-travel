@@ -38,7 +38,7 @@ public class TourService implements ITourService{
     public TourResponse create(TourRequest request) {
         var customer = customerRepository.findById(request.getCustomerId()).orElseThrow();
         var fligths = new HashSet<FlyEntity>();
-        request.getFligths().forEach(fly -> fligths.add(this.flyRepository.findById(fly.getId()).orElseThrow()));
+        request.getFlights().forEach(fly -> fligths.add(this.flyRepository.findById(fly.getId()).orElseThrow()));
         var hotels = new HashMap<HotelEntity,Integer>();
         request.getHotels().forEach(hotel -> hotels.put(this.hotelRepository.findById(
             hotel.getId()).orElseThrow(),hotel.getTotalDays()));
