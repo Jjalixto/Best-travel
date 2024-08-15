@@ -72,27 +72,37 @@ public class TourService implements ITourService{
     }
 
     @Override
-    public void remuveTicket(UUID ticketId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remuveTicket'");
+    public void removeTicket(Long tourId,UUID ticketId) {
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        tourUpdate.removeTicket(ticketId);
+        this.tourRepository.save(tourUpdate);
     }
 
     @Override
     public UUID addTicket(Long flyId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addTicket'");
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        var fly = this.flyRepository.findById(flyId).orElseThrow();
+        var ticket = this.tourHelper.createTicket(fly, tourUpdate.getCustomer());
+        tourUpdate.addTicket(ticket);
+        this.tourRepository.save(tourUpdate);
+        return ticket.getId();
     }
 
     @Override
-    public void remuveReservation(UUID reservationId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'remuveReservation'");
+    public void removeReservation(Long tourId, UUID reservationId) {
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        tourUpdate.removeReservation(reservationId);
+        this.tourRepository.save(tourUpdate);
     }
 
     @Override
-    public UUID addReservation(Long reservationId, Long tourId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addReservation'");
+    public UUID addReservation(Long tourId, Long hotelId,Integer totalDays) {
+        var tourUpdate = this.tourRepository.findById(tourId).orElseThrow();
+        var hotel = this.hotelRepository.findById(hotelId).orElseThrow();
+        var reservation = this.tourHelper.createReservation(hotel, tourUpdate.getCustomer(),totalDays);
+        tourUpdate.addReservation(reservation);
+        this.tourRepository.save(tourUpdate);
+        return reservation.getId();
     }
     
 }
