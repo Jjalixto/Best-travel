@@ -16,6 +16,8 @@ import com.joel.best_travel.domain.repositories.CustomerRepository;
 import com.joel.best_travel.domain.repositories.FlyRepository;
 import com.joel.best_travel.domain.repositories.TicketRepository;
 import com.joel.best_travel.infraestructura.abstract_services.ITicketService;
+import com.joel.best_travel.infraestructura.helpers.BlackListHelper;
+import com.joel.best_travel.infraestructura.helpers.CustomerHelper;
 import com.joel.best_travel.util.BestTravelUtil;
 
 import lombok.AllArgsConstructor;
@@ -30,9 +32,12 @@ public class TicketService implements ITicketService {
     private final FlyRepository flyRepository;
     private final CustomerRepository customerRepository;
     private final TicketRepository ticketRepository;
+    private final CustomerHelper customerHelper;
+    private BlackListHelper blackListHelper;
 
     @Override
     public TicketResponse create(TicketRequest request) {
+        blackListHelper.isInBlackListCustomer(request.getIdClient());
         var fly = flyRepository.findById(request.getIdFly()).orElseThrow();
         var customer = customerRepository.findById(request.getIdClient()).orElseThrow();
         var ticketToPersist = TicketEntity.builder()
@@ -45,6 +50,7 @@ public class TicketService implements ITicketService {
                 .arrivalDate(BestTravelUtil.getRandomLatter())
                 .build();
         var ticketPersisted = this.ticketRepository.save(ticketToPersist);
+        customerHelper.increase(customer.getDni(), TicketService.class);
         log.info("Ticked saved with id: {}" + ticketPersisted.getId());
         return this.entityToResponse(ticketPersisted);
     }

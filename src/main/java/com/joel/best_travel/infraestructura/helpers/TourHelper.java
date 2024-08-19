@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +15,8 @@ import com.joel.best_travel.domain.entities.FlyEntity;
 import com.joel.best_travel.domain.entities.HotelEntity;
 import com.joel.best_travel.domain.entities.ReservationEntity;
 import com.joel.best_travel.domain.entities.TicketEntity;
-import com.joel.best_travel.domain.repositories.HotelRepository;
 import com.joel.best_travel.domain.repositories.ReservationRepository;
 import com.joel.best_travel.domain.repositories.TicketRepository;
-import com.joel.best_travel.infraestructura.service.HotelService;
 import com.joel.best_travel.infraestructura.service.ReservationService;
 import com.joel.best_travel.infraestructura.service.TicketService;
 import com.joel.best_travel.util.BestTravelUtil;

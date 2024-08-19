@@ -11,9 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joel.best_travel.api.models.response.FlyResponse;
 import com.joel.best_travel.api.models.response.HotelResponse;
-import com.joel.best_travel.domain.entities.FlyEntity;
 import com.joel.best_travel.domain.entities.HotelEntity;
 import com.joel.best_travel.domain.repositories.HotelRepository;
 import com.joel.best_travel.infraestructura.abstract_services.IHotelService;
@@ -21,7 +19,7 @@ import com.joel.best_travel.util.SortType;
 
 import lombok.AllArgsConstructor;
 
-@Transactional
+@Transactional(readOnly = true)
 @Service
 @AllArgsConstructor
 public class HotelService implements IHotelService{
