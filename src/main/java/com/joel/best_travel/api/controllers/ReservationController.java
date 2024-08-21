@@ -17,19 +17,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joel.best_travel.api.models.request.ReservationRequest;
+import com.joel.best_travel.api.models.response.ErrorsResponse;
 import com.joel.best_travel.api.models.response.ReservationResponse;
 import com.joel.best_travel.infraestructura.abstract_services.IReservationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping(path = "reservation")
 @AllArgsConstructor
+@Tag(name = "Reservation")
 public class ReservationController {
 
     private final IReservationService reservationService;
 
+    @ApiResponse(
+        responseCode = "400", 
+        description = "When the request have a field invalid we response this",
+        content = {
+            @Content(mediaType = "application/json",schema = @Schema(implementation = ErrorsResponse.class))
+        })
+    @Operation(summary = "Save in system in reservation with the fly passed in parameter")
     @PostMapping
     public ResponseEntity<ReservationResponse> post(@Valid @RequestBody ReservationRequest request){
         return ResponseEntity.ok(reservationService.create(request));

@@ -20,12 +20,14 @@ import com.joel.best_travel.api.models.request.TicketRequest;
 import com.joel.best_travel.api.models.response.TicketResponse;
 import com.joel.best_travel.infraestructura.abstract_services.ITicketService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping(path = "ticket")
 @AllArgsConstructor
+@Tag(name = "Ticket")
 public class TicketController {
 
     private final ITicketService ticketService;
