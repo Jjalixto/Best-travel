@@ -8,5 +8,5 @@ import com.joel.best_travel.api.models.response.ReservationResponse;
 
 public interface IReservationService extends CrudService<ReservationRequest,ReservationResponse,UUID>{
     
-    public BigDecimal findPrice(Long hotelId);
+    public BigDecimal findPrice(Long hotelId,java.util.Currency currency);
 }

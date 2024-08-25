@@ -11,7 +11,7 @@ public class WebClientConfig {
     
     @Value(value = "${api.base.url}")
     private String baseUrl;
-    @Value(value = "${api.api-key}")
+    @Value(value = "${api.api.key}")
     private String apiKey;
     @Value(value = "${api.api-key.header}")
     private String apiKeyHeader;

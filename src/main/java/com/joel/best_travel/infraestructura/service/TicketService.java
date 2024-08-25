@@ -2,6 +2,7 @@ package com.joel.best_travel.infraestructura.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
@@ -18,7 +19,9 @@ import com.joel.best_travel.domain.repositories.TicketRepository;
 import com.joel.best_travel.infraestructura.abstract_services.ITicketService;
 import com.joel.best_travel.infraestructura.helpers.BlackListHelper;
 import com.joel.best_travel.infraestructura.helpers.CustomerHelper;
+import com.joel.best_travel.infraestructura.helpers.EmailHelper;
 import com.joel.best_travel.util.BestTravelUtil;
+import com.joel.best_travel.util.enums.Tables;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +36,8 @@ public class TicketService implements ITicketService {
     private final CustomerRepository customerRepository;
     private final TicketRepository ticketRepository;
     private final CustomerHelper customerHelper;
-    private BlackListHelper blackListHelper;
+    private final BlackListHelper blackListHelper;
+    private final EmailHelper emailHelper;
 
     @Override
     public TicketResponse create(TicketRequest request) {
@@ -52,6 +56,7 @@ public class TicketService implements ITicketService {
         var ticketPersisted = this.ticketRepository.save(ticketToPersist);
         customerHelper.increase(customer.getDni(), TicketService.class);
         log.info("Ticked saved with id: {}" + ticketPersisted.getId());
+        if(Objects.nonNull(request.getEmail()))this.emailHelper.sendMail(request.getEmail(), customer.getFullName(), Tables.ticket.name());
         return this.entityToResponse(ticketPersisted);
     }
 
