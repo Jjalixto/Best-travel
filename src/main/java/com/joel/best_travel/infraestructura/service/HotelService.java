@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,6 +17,7 @@ import com.joel.best_travel.domain.entities.HotelEntity;
 import com.joel.best_travel.domain.repositories.HotelRepository;
 import com.joel.best_travel.infraestructura.abstract_services.IHotelService;
 import com.joel.best_travel.util.SortType;
+import com.joel.best_travel.util.constants.CacheConstants;
 
 import lombok.AllArgsConstructor;
 
@@ -27,7 +29,13 @@ public class HotelService implements IHotelService{
     private final HotelRepository hotelRepository;
 
     @Override
+    @Cacheable(value = CacheConstants.HOTEL_CACHE_NAME)
     public Page<HotelResponse> realAll(Integer page, Integer size, SortType sortType) {
+        try {
+            Thread.sleep(7000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         PageRequest pageRequest = null;
         switch(sortType){
             case NONE -> pageRequest = PageRequest.of(page, size);
@@ -38,7 +46,13 @@ public class HotelService implements IHotelService{
     }
 
     @Override
+    @Cacheable(value = CacheConstants.HOTEL_CACHE_NAME)
     public Set<HotelResponse> readLessPrice(BigDecimal price) {
+        try {
+            Thread.sleep(7000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return this.hotelRepository.findByPriceLessThan(price)
             .stream()
             .map(this::entityToResponse)
@@ -46,7 +60,13 @@ public class HotelService implements IHotelService{
     }
 
     @Override
+    @Cacheable(value = CacheConstants.HOTEL_CACHE_NAME)
     public Set<HotelResponse> readBetweenPrices(BigDecimal min, BigDecimal max) {
+        try {
+            Thread.sleep(7000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return this.hotelRepository.findByPriceBetween(min,max)
             .stream()
             .map(this::entityToResponse)
@@ -54,7 +74,13 @@ public class HotelService implements IHotelService{
     }
 
     @Override
+    @Cacheable(value = CacheConstants.HOTEL_CACHE_NAME)
     public Set<HotelResponse> readByRating(Integer rating) {
+        try {
+            Thread.sleep(7000);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return this.hotelRepository.findByRatingGreaterThan(rating)
             .stream()
             .map(this::entityToResponse)
