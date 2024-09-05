@@ -11,6 +11,7 @@ import com.joel.best_travel.api.models.response.BaseErrorResponse;
 import com.joel.best_travel.api.models.response.ErrorResponse;
 import com.joel.best_travel.api.models.response.ErrorsResponse;
 import com.joel.best_travel.util.exceptions.IdNotFoundException;
+import com.joel.best_travel.util.exceptions.UsernameNotFoundException;
 
 import java.util.ArrayList;
 
@@ -18,14 +19,13 @@ import java.util.ArrayList;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequestController {
     
-    @ExceptionHandler(IdNotFoundException.class)
-    public BaseErrorResponse handleIdNotFound(IdNotFoundException exception){
+    @ExceptionHandler({IdNotFoundException.class,UsernameNotFoundException.class})
+    public BaseErrorResponse handleIdNotFound(RuntimeException exception){
         return ErrorResponse.builder()
             .message(exception.getMessage())
             .status(HttpStatus.BAD_REQUEST.name())
             .code(HttpStatus.BAD_REQUEST.value())
             .build();
-            
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

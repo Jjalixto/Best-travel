@@ -12,8 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 
-import com.joel.best_travel.domain.entities.CustomerEntity;
-import com.joel.best_travel.domain.repositories.CustomerRepository;
+import com.joel.best_travel.domain.entities.jpa.CustomerEntity;
+import com.joel.best_travel.domain.repositories.jpa.CustomerRepository;
 import com.joel.best_travel.infraestructura.abstract_services.ReportService;
 
 import lombok.AllArgsConstructor;

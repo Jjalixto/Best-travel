@@ -29,9 +29,9 @@ services:
     container_name: best_travel_users
     environment:
       MONGO_INITDB_ROOT_USERNAME: joel
-      MONGO_INITDB_ROOT_PASSWORD: 200302
+      MONGO_INITDB_ROOT_PASSWORD: jalixto
       MONGO_INITDB_DATABASE: users
     ports:
-      - "27017:27017"
+        - "27017:27017"
     volumes:
       - ./db/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro

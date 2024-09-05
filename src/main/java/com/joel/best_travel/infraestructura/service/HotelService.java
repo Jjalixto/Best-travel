@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joel.best_travel.api.models.response.HotelResponse;
-import com.joel.best_travel.domain.entities.HotelEntity;
-import com.joel.best_travel.domain.repositories.HotelRepository;
+import com.joel.best_travel.domain.entities.jpa.HotelEntity;
+import com.joel.best_travel.domain.repositories.jpa.HotelRepository;
 import com.joel.best_travel.infraestructura.abstract_services.IHotelService;
 import com.joel.best_travel.util.SortType;
 import com.joel.best_travel.util.constants.CacheConstants;

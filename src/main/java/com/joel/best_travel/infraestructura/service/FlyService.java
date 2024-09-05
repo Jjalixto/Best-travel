@@ -15,8 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.joel.best_travel.api.models.response.FlyResponse;
-import com.joel.best_travel.domain.entities.FlyEntity;
-import com.joel.best_travel.domain.repositories.FlyRepository;
+import com.joel.best_travel.domain.entities.jpa.FlyEntity;
+
+import com.joel.best_travel.domain.repositories.jpa.FlyRepository;
 import com.joel.best_travel.infraestructura.abstract_services.IFlyService;
 import com.joel.best_travel.util.SortType;
 import com.joel.best_travel.util.constants.CacheConstants;
